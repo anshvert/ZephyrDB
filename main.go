@@ -1,8 +1,8 @@
-package MyDB
+package main
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"fmt"
 	"log"
 	"os"
 	"sync"
@@ -24,7 +24,7 @@ func NewDatabase(fileName string) *Database {
 }
 
 func (db *Database) load() {
-	file, err := ioutil.ReadFile(db.file)
+	file, err := os.ReadFile(db.file)
 	if err != nil {
 		if os.IsNotExist(err) {
 			return
@@ -37,6 +37,35 @@ func (db *Database) load() {
 	}
 }
 
+func (db *Database) Save() {
+	db.mu.Lock()         // DeadLock
+	defer db.mu.Unlock() // Deadlock ? Two mu.unlock ?
+	file, err := json.MarshalIndent(db.data, "", "  ")
+	if err != nil {
+		log.Fatalf("Failed to encode database: %v", err)
+	}
+	err = os.WriteFile(db.file, file, 0644)
+	if err != nil {
+		log.Fatalf("Failed to write database: %v", err)
+	}
+}
+
+func (db *Database) Set(key string, value interface{}) {
+	db.mu.Lock()
+	defer db.mu.Unlock()
+	db.data[key] = value
+	db.Save()
+}
+
+func (db *Database) Get(key string) (interface{}, bool) {
+	db.mu.RLock()
+	defer db.mu.RUnlock()
+	value, ok := db.data[key]
+	return value, ok
+}
+
 func main() {
 	db := NewDatabase("./db.json")
+	db.Set("foo", "bar")
+	fmt.Println(db.Get("foo"))
 }

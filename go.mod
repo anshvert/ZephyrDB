@@ -1,3 +1,3 @@
-module MyDB
+module ZephyrDB
 
 go 1.18
