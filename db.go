@@ -8,6 +8,8 @@ import (
 	"sync"
 )
 
+// HU
+
 type Database struct {
 	data map[string]interface{}
 	mu   sync.RWMutex
