@@ -38,8 +38,6 @@ func (db *Database) load() {
 }
 
 func (db *Database) Save() {
-	db.mu.Lock()         // DeadLock
-	defer db.mu.Unlock() // Deadlock ? Two mu.unlock ?
 	file, err := json.MarshalIndent(db.data, "", "  ")
 	if err != nil {
 		log.Fatalf("Failed to encode database: %v", err)
