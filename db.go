@@ -8,7 +8,7 @@ import (
 	"sync"
 )
 
-// HU
+// HUhaha
 
 type Database struct {
 	data map[string]interface{}
