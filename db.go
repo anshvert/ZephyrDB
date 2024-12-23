@@ -1,8 +1,7 @@
-package main
+package ZephyrDB
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"os"
 	"sync"
@@ -64,8 +63,8 @@ func (db *Database) Get(key string) (interface{}, bool) {
 	return value, ok
 }
 
-func main() {
-	db := NewDatabase("./db.json")
-	db.Set("foo", "bar")
-	fmt.Println(db.Get("foo"))
-}
+//func main() {
+//	db := NewDatabase("./db.json")
+//	db.Set("foo", "bar")
+//	fmt.Println(db.Get("foo"))
+//}
